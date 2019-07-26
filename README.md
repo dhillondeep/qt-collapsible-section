@@ -1,6 +1,6 @@
 # QT: Collapsible Section
 
-This is a simple collapsable section for QT5.
+This is a simple collapsible section for QT5.
 
 Special thanks to "x squared" who has posted the original code for this idea at StackOverflow: http://stackoverflow.com/a/37119983/2573127
 
