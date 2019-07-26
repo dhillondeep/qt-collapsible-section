@@ -46,6 +46,10 @@ public:
     explicit Section(QWidget *parent = nullptr);
 
     void setContentLayout(QLayout *contentLayout);
+    void setToggleButtonStyle(const QString& style);
+    void setHeaderLineStyle(const QString& style);
+    void setContentAreaStyle(const QString& style);
+    void setContentAreaFrameShape(const QFrame::Shape &shape);
 };
 
 #endif // SECTION_H

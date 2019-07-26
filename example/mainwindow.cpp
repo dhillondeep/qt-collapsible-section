@@ -16,7 +16,7 @@
 
     You should have received a copy of the GNU General Public License
     along with Elypson/qt-collapsible-section. If not, see <http://www.gnu.org/licenses/>.
-*/    
+*/
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
@@ -40,6 +40,10 @@ MainWindow::MainWindow(QWidget *parent) :
     anyLayout->addWidget(new QPushButton("Button in Section", section));
 
     section->setContentLayout(anyLayout);
+    QPalette pal = palette();
+    pal.setColor(QPalette::Window, Qt::white);
+    section->setToggleButtonStyle("QToolButton {color: white;}");
+    section->setContentAreaFrameShape(QFrame::NoFrame);
 }
 
 MainWindow::~MainWindow()

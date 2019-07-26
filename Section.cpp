@@ -16,11 +16,13 @@
 
     You should have received a copy of the GNU General Public License
     along with Elypson/qt-collapsible-section. If not, see <http://www.gnu.org/licenses/>.
-*/    
+*/
 
 #include <QPropertyAnimation>
 
 #include "Section.h"
+
+static constexpr const char* const toggleButtonStylesheet = "QToolButton {border: none;}";
 
 Section::Section(const QString & title, const int animationDuration, QWidget* parent)
     : QWidget(parent), m_animationDuration(animationDuration) {
@@ -30,10 +32,10 @@ Section::Section(const QString & title, const int animationDuration, QWidget* pa
     m_contentArea = new QScrollArea(this);
     m_mainLayout = new QGridLayout(this);
 
-    m_toggleButton->setStyleSheet("QToolButton {border: none;}");
+    m_toggleButton->setStyleSheet(toggleButtonStylesheet);
     m_toggleButton->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
     m_toggleButton->setArrowType(Qt::ArrowType::RightArrow);
-    m_toggleButton->setText(title);
+    m_toggleButton->setText(" " + title);
     m_toggleButton->setCheckable(true);
     m_toggleButton->setChecked(false);
 
@@ -68,7 +70,7 @@ Section::Section(const QString & title, const int animationDuration, QWidget* pa
     });
 }
 
-Section::Section(QWidget *parent) : Section("", 100, parent) {}
+Section::Section(QWidget *parent) : Section(defaultTitle, defaultAnimDuration, parent) {}
 
 void Section::setContentLayout(QLayout *contentLayout) {
     delete m_contentArea->layout();
@@ -88,4 +90,19 @@ void Section::setContentLayout(QLayout *contentLayout) {
     contentAnimation->setDuration(m_animationDuration);
     contentAnimation->setStartValue(0);
     contentAnimation->setEndValue(contentHeight);
+}
+
+void Section::setToggleButtonStyle(const QString &style) {
+    QString combined = QString(toggleButtonStylesheet) + " " + style;
+    m_toggleButton->setStyleSheet(combined);
+}
+void Section::setHeaderLineStyle(const QString &style) {
+    m_headerLine->setStyleSheet(style);
+}
+void Section::setContentAreaStyle(const QString &style) {
+    m_contentArea->setStyleSheet(style);
+}
+
+void Section::setContentAreaFrameShape(const QFrame::Shape &shape) {
+  m_contentArea->setFrameShape(shape);
 }
