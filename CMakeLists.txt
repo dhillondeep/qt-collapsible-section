@@ -1,4 +1,4 @@
-project(qt-section-widget)
+project(qt-collapsible-section)
 
 cmake_minimum_required(VERSION 3.1)
 

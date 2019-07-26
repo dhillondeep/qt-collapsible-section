@@ -10,11 +10,13 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(Qt5 COMPONENTS Core Widgets REQUIRED)
 
+set(QT_COLLAPSIBLE_SECTION "qt-collapsible-section")
+
 set(HEADERS mainwindow.h)
 set(SOURCES main.cpp mainwindow.cpp)
 set(UI mainwindow.ui)
 
-add_subdirectory("../" "qt-section-widget")
+add_subdirectory("../" ${QT_COLLAPSIBLE_SECTION})
 
 add_executable(${PROJECT_NAME} ${HEADERS} ${SOURCES} ${UI})
 
@@ -23,4 +25,4 @@ target_link_libraries(${PROJECT_NAME} PRIVATE Qt5::Core Qt5::Widgets)
 
 # link against qt-section-widget
 target_include_directories(${PROJECT_NAME} PRIVATE "../")
-target_link_libraries(${PROJECT_NAME} PRIVATE qt-section-widget)
+target_link_libraries(${PROJECT_NAME} PRIVATE ${QT_COLLAPSIBLE_SECTION})
