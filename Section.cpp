@@ -23,70 +23,69 @@
 #include "Section.h"
 
 Section::Section(const QString & title, const int animationDuration, QWidget* parent)
-    : QWidget(parent), animationDuration(animationDuration)
-{
-    toggleButton = new QToolButton(this);
-    headerLine = new QFrame(this);
-    toggleAnimation = new QParallelAnimationGroup(this);
-    contentArea = new QScrollArea(this);
-    mainLayout = new QGridLayout(this);
+    : QWidget(parent), m_animationDuration(animationDuration) {
+    m_toggleButton = new QToolButton(this);
+    m_headerLine = new QFrame(this);
+    m_toggleAnimation = new QParallelAnimationGroup(this);
+    m_contentArea = new QScrollArea(this);
+    m_mainLayout = new QGridLayout(this);
 
-    toggleButton->setStyleSheet("QToolButton {border: none;}");
-    toggleButton->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
-    toggleButton->setArrowType(Qt::ArrowType::RightArrow);
-    toggleButton->setText(title);
-    toggleButton->setCheckable(true);
-    toggleButton->setChecked(false);
+    m_toggleButton->setStyleSheet("QToolButton {border: none;}");
+    m_toggleButton->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
+    m_toggleButton->setArrowType(Qt::ArrowType::RightArrow);
+    m_toggleButton->setText(title);
+    m_toggleButton->setCheckable(true);
+    m_toggleButton->setChecked(false);
 
-    headerLine->setFrameShape(QFrame::HLine);
-    headerLine->setFrameShadow(QFrame::Sunken);
-    headerLine->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Maximum);
+    m_headerLine->setFrameShape(QFrame::HLine);
+    m_headerLine->setFrameShadow(QFrame::Sunken);
+    m_headerLine->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Maximum);
 
-    contentArea->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
+    m_contentArea->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
 
     // start out collapsed
-    contentArea->setMaximumHeight(0);
-    contentArea->setMinimumHeight(0);
+    m_contentArea->setMaximumHeight(0);
+    m_contentArea->setMinimumHeight(0);
 
     // let the entire widget grow and shrink with its content
-    toggleAnimation->addAnimation(new QPropertyAnimation(this, "minimumHeight"));
-    toggleAnimation->addAnimation(new QPropertyAnimation(this, "maximumHeight"));
-    toggleAnimation->addAnimation(new QPropertyAnimation(contentArea, "maximumHeight"));
+    m_toggleAnimation->addAnimation(new QPropertyAnimation(this, "minimumHeight"));
+    m_toggleAnimation->addAnimation(new QPropertyAnimation(this, "maximumHeight"));
+    m_toggleAnimation->addAnimation(new QPropertyAnimation(m_contentArea, "maximumHeight"));
 
-    mainLayout->setVerticalSpacing(0);
-    mainLayout->setContentsMargins(0, 0, 0, 0);
+    m_mainLayout->setVerticalSpacing(0);
+    m_mainLayout->setContentsMargins(0, 0, 0, 0);
 
     int row = 0;
-    mainLayout->addWidget(toggleButton, row, 0, 1, 1, Qt::AlignLeft);
-    mainLayout->addWidget(headerLine, row++, 2, 1, 1);
-    mainLayout->addWidget(contentArea, row, 0, 1, 3);
-    setLayout(mainLayout);
+    m_mainLayout->addWidget(m_toggleButton, row, 0, 1, 1, Qt::AlignLeft);
+    m_mainLayout->addWidget(m_headerLine, ++row, 2, 1, 1);
+    m_mainLayout->addWidget(m_contentArea, row, 0, 1, 3);
+    setLayout(m_mainLayout);
 
-    QObject::connect(toggleButton, &QToolButton::toggled, [this](const bool checked)
-    {
-        toggleButton->setArrowType(checked ? Qt::ArrowType::DownArrow : Qt::ArrowType::RightArrow);
-        toggleAnimation->setDirection(checked ? QAbstractAnimation::Forward : QAbstractAnimation::Backward);
-        toggleAnimation->start();
+    QObject::connect(m_toggleButton, &QToolButton::toggled, [this](const bool checked) {
+        m_toggleButton->setArrowType(checked ? Qt::ArrowType::DownArrow : Qt::ArrowType::RightArrow);
+        m_toggleAnimation->setDirection(checked ? QAbstractAnimation::Forward : QAbstractAnimation::Backward);
+        m_toggleAnimation->start();
     });
 }
 
-void Section::setContentLayout(QLayout & contentLayout)
-{
-    delete contentArea->layout();
-    contentArea->setLayout(&contentLayout);
-    const auto collapsedHeight = sizeHint().height() - contentArea->maximumHeight();
-    auto contentHeight = contentLayout.sizeHint().height();
+Section::Section(QWidget *parent) : Section("", 100, parent) {}
 
-    for (int i = 0; i < toggleAnimation->animationCount() - 1; ++i)
-    {
-        QPropertyAnimation* SectionAnimation = static_cast<QPropertyAnimation *>(toggleAnimation->animationAt(i));
-        SectionAnimation->setDuration(animationDuration);
-        SectionAnimation->setStartValue(collapsedHeight);
-        SectionAnimation->setEndValue(collapsedHeight + contentHeight);
+void Section::setContentLayout(QLayout *contentLayout) {
+    delete m_contentArea->layout();
+    m_contentArea->setLayout(contentLayout);
+
+    const auto collapsedHeight = sizeHint().height() - m_contentArea->maximumHeight();
+    auto contentHeight = contentLayout->sizeHint().height();
+
+    for (int i = 0; i < m_toggleAnimation->animationCount() - 1; ++i) {
+        auto sectionAnimation = dynamic_cast<QPropertyAnimation *>(m_toggleAnimation->animationAt(i));
+        sectionAnimation->setDuration(m_animationDuration);
+        sectionAnimation->setStartValue(collapsedHeight);
+        sectionAnimation->setEndValue(collapsedHeight + contentHeight);
     }
 
-    QPropertyAnimation* contentAnimation = static_cast<QPropertyAnimation *>(toggleAnimation->animationAt(toggleAnimation->animationCount() - 1));
-    contentAnimation->setDuration(animationDuration);
+    auto contentAnimation = dynamic_cast<QPropertyAnimation *>(m_toggleAnimation->animationAt(m_toggleAnimation->animationCount() - 1));
+    contentAnimation->setDuration(m_animationDuration);
     contentAnimation->setStartValue(0);
     contentAnimation->setEndValue(contentHeight);
 }

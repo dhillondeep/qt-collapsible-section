@@ -31,18 +31,21 @@
 class Section : public QWidget {
     Q_OBJECT
 private:
+    static constexpr const char* const defaultTitle = "";
+    static constexpr int defaultAnimDuration = 100;
 
-    QGridLayout* mainLayout;
-    QToolButton* toggleButton;
-    QFrame* headerLine;
-    QParallelAnimationGroup* toggleAnimation;
-    QScrollArea* contentArea;
-    int animationDuration;
+    QGridLayout* m_mainLayout;
+    QToolButton* m_toggleButton;
+    QFrame* m_headerLine;
+    QParallelAnimationGroup* m_toggleAnimation;
+    QScrollArea* m_contentArea;
+    int m_animationDuration;
 
 public:
-    explicit Section(const QString & title = "", const int animationDuration = 100, QWidget* parent = 0);
+    explicit Section(const QString &title = defaultTitle, int animationDuration = defaultAnimDuration, QWidget *parent = nullptr);
+    explicit Section(QWidget *parent = nullptr);
 
-    void setContentLayout(QLayout & contentLayout);
+    void setContentLayout(QLayout *contentLayout);
 };
 
 #endif // SECTION_H

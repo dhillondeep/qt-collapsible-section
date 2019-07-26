@@ -1,2 +1,6 @@
 *.autosave
 bin/
+
+# idea
+.idea/
+cmake-build-debug

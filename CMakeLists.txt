@@ -15,4 +15,3 @@ set(SOURCES Section.cpp)
 add_library(${PROJECT_NAME} STATIC ${HEADERS} ${SOURCES})
 
 target_link_libraries(${PROJECT_NAME} PRIVATE Qt5::Core Qt5::Widgets)
-

@@ -39,7 +39,7 @@ MainWindow::MainWindow(QWidget *parent) :
     anyLayout->addWidget(new QLabel("Some Text in Section", section));
     anyLayout->addWidget(new QPushButton("Button in Section", section));
 
-    section->setContentLayout(*anyLayout);
+    section->setContentLayout(anyLayout);
 }
 
 MainWindow::~MainWindow()

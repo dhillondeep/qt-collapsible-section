@@ -12,8 +12,8 @@ Special thanks to "x squared" who has posted the original code for this idea at 
 * Using CMake link the library with main target
 
 ```cmake
-include_directory(qt-section-widget)
 add_subdirectory(qt-section-widget)
+target_include_directories(${PROJECT_NAME} PRIVATE qt-section-widget)
 target_link_libraries(${PROJECT_NAME} PRIVATE qt-section-widget)
 ```
 
@@ -26,7 +26,7 @@ An example of this can be seen inside the **example** folder.
     anyLayout->addWidget(new QLabel("Some Text in Section", section));
     anyLayout->addWidget(new QPushButton("Button in Section", section));
 
-    section->setContentLayout(*anyLayout);
+    section->setContentLayout(anyLayout);
 
 ## Sample Animation
 
